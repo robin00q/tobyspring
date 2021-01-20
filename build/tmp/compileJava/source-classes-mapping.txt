@@ -4,3 +4,5 @@ springbook/user/domain/User.java
  springbook.user.domain.User
 springbook/user/TobyApplication.java
  springbook.user.TobyApplication
+springbook/user/dao/SimpleConnectionMaker.java
+ springbook.user.dao.SimpleConnectionMaker
