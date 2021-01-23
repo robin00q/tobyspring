@@ -59,11 +59,7 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-        executeSql("delete from users");
-    }
-
-    private void executeSql(final String query) throws SQLException {
-        jdbcContext.workWithStatementStrategy(c -> c.prepareStatement(query));
+        jdbcContext.executeSql("delete from users");
     }
 
     public int getCount() throws SQLException {
