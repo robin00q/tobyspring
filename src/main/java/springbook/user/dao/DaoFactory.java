@@ -1,6 +1,5 @@
 package springbook.user.dao;
 
-
 public class DaoFactory {
     public ConnectionMaker connectionMaker() {
         return new DConnectionMaker();
