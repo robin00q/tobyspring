@@ -14,6 +14,7 @@ repositories {
 dependencies {
     // springBoot
     implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-jdbc"
 
     // h2
     runtimeOnly 'com.h2database:h2:1.4.200'
