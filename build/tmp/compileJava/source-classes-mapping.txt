@@ -8,7 +8,7 @@ springbook/user/dao/ConnectionMaker.java
  springbook.user.dao.ConnectionMaker
 springbook/user/domain/User.java
  springbook.user.domain.User
-springbook/user/TobyApplication.java
- springbook.user.TobyApplication
 springbook/user/dao/DaoFactory.java
  springbook.user.dao.DaoFactory
+springbook/user/TobyApplication.java
+ springbook.user.TobyApplication
