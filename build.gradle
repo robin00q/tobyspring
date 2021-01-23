@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id "org.springframework.boot" version "2.3.6.RELEASE"
+    id "io.spring.dependency-management" version "1.0.10.RELEASE"
 }
 
 group 'me.spring'
@@ -10,8 +12,17 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    // springBoot
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-jdbc"
+
+    // h2
+    runtimeOnly 'com.h2database:h2:1.4.200'
+
+    // test
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+    }
 }
 
 test {
