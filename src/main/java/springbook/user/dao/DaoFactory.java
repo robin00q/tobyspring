@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
-import java.sql.DriverManager;
 
 @Configuration
 public class DaoFactory {
+
     @Bean
     public ConnectionMaker connectionMaker() {
         return new DConnectionMaker();
@@ -26,7 +26,8 @@ public class DaoFactory {
 
     @Bean
     public UserDao userDao() {
-        UserDao userDao = new UserDao(dataSource());
+        UserDao userDao = new UserDao();
+        userDao.setDataSource(dataSource());
         return userDao;
     }
 }
