@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static springbook.user.dao.UserService.MIN_LOGOUT_FOR_SILVER;
 import static springbook.user.dao.UserService.MIN_RECOMMEND_FOR_GOLD;
 
@@ -77,6 +78,38 @@ class UserServiceTest {
         } else {
             assertEquals(user.getLevel(), userUpdate.getLevel());
         }
+    }
+
+    static class TestUserService extends UserService {
+        private String id;
+
+        public TestUserService(String id) {
+            this.id = id;
+        }
+
+        protected void upgradeLevel(User user) {
+            if(user.getId().equals(this.id)) throw new TestUserServiceException();
+            super.upgradeLevel(user);
+        }
+    }
+
+    static class TestUserServiceException extends RuntimeException {
+    }
+
+    @Test
+    void upgradeAllOrNothing() {
+        UserService testUserService = new TestUserService(users.get(3).getId());
+        testUserService.setUserDao(userDao);
+
+        userDao.deleteAll();
+        for (User user : users) {
+            userDao.add(user);
+        }
+
+        assertThrows(TestUserServiceException.class, () -> testUserService.upgradeLevels());
+
+        checkLevelUpgraded(users.get(1), false);
+
     }
 
 }
