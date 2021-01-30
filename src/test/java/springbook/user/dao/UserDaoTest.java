@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import springbook.user.domain.User;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,6 +23,8 @@ class UserDaoTest {
     ApplicationContext context;
     @Autowired
     UserDao dao;
+    @Autowired
+    DataSource dataSource;
 
     private User user1;
     private User user2;
@@ -31,6 +35,14 @@ class UserDaoTest {
         user1 = new User("user1", "이석준1", "111111");
         user2 = new User("user2", "이석준2", "222222");
         user3 = new User("user3", "이석준3", "333333");
+    }
+
+    @Test
+    void duplicateKey() {
+        dao.deleteAll();
+
+        dao.add(user1);
+        assertThrows(DuplicateKeyException.class, () -> dao.add(user1));
     }
 
     @Test
@@ -104,5 +116,7 @@ class UserDaoTest {
         assertEquals(user1.getName(), user2.getName());
         assertEquals(user1.getPassword(), user2.getPassword());
     }
+
+
 
 }
