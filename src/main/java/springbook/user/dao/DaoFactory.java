@@ -30,4 +30,11 @@ public class DaoFactory {
         userDao.setDataSource(dataSource());
         return userDao;
     }
+
+    @Bean
+    public UserService userService() {
+        UserService userService = new UserService();
+        userService.setUserDao(userDao());
+        return userService;
+    }
 }
