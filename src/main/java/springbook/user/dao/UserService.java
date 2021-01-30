@@ -9,6 +9,9 @@ public class UserService {
 
     UserDao userDao;
 
+    public static final int MIN_LOGOUT_FOR_SILVER = 50;
+    public static final int MIN_RECOMMEND_FOR_GOLD = 30;
+
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
