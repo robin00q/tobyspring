@@ -4,10 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
-import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,7 +26,7 @@ class UserServiceTest {
     UserDao userDao;
 
     @Autowired
-    DataSource dataSource;
+    PlatformTransactionManager transactionManager;
 
     List<User> users;
 
@@ -60,7 +60,7 @@ class UserServiceTest {
     }
 
     @Test
-    void upgradeLevels() throws Exception {
+    void upgradeLevels() {
         userDao.deleteAll();
         for(User user : users) {
             userDao.add(user);
@@ -104,7 +104,7 @@ class UserServiceTest {
     void upgradeAllOrNothing() {
         UserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(userDao);
-        testUserService.setDataSource(dataSource);
+        testUserService.setTransactionManager(transactionManager);
 
         userDao.deleteAll();
         for (User user : users) {
@@ -114,7 +114,5 @@ class UserServiceTest {
         assertThrows(TestUserServiceException.class, () -> testUserService.upgradeLevels());
 
         checkLevelUpgraded(users.get(1), false);
-
     }
-
 }
