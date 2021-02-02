@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 import javax.sql.DataSource;
@@ -32,9 +33,29 @@ class UserDaoTest {
 
     @BeforeEach
     void setUp() {
-        user1 = new User("user1", "이석준1", "111111");
-        user2 = new User("user2", "이석준2", "222222");
-        user3 = new User("user3", "이석준3", "333333");
+        user1 = new User("user1", "이석준1", "email1.com", "111111", Level.BASIC, 1, 0);
+        user2 = new User("user2", "이석준2", "email2.com", "222222", Level.SILVER, 55, 10);
+        user3 = new User("user3", "이석준3", "email3.com", "333333", Level.GOLD, 100, 40);
+    }
+
+    @Test
+    void update() {
+        dao.deleteAll();
+
+        dao.add(user1);
+        dao.add(user2);
+
+        user1.setName("이석준");
+        user1.setPassword("password");
+        user1.setLevel(Level.GOLD);
+        user1.setLogin(1000);
+        user1.setRecommend(999);
+        dao.update(user1);
+
+        User user1update = dao.get(user1.getId());
+        checkSameUser(user1, user1update);
+        User user2update = dao.get(user2.getId());
+        checkSameUser(user2, user2update);
     }
 
     @Test
@@ -115,6 +136,9 @@ class UserDaoTest {
         assertEquals(user1.getId(), user2.getId());
         assertEquals(user1.getName(), user2.getName());
         assertEquals(user1.getPassword(), user2.getPassword());
+        assertEquals(user1.getLevel(), user2.getLevel());
+        assertEquals(user1.getLogin(), user2.getLogin());
+        assertEquals(user1.getRecommend(), user2.getRecommend());
     }
 
 
