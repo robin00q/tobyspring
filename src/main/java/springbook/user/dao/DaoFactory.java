@@ -4,6 +4,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.mail.MailSender;
+import springbook.user.mail.DummyMailSender;
 
 import javax.sql.DataSource;
 
@@ -33,10 +35,19 @@ public class DaoFactory {
     }
 
     @Bean
+    public MailSender mailSender() {
+//        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+//        mailSender.setHost("mail.server.com");
+//        return mailSender;
+        return new DummyMailSender();
+    }
+
+    @Bean
     public UserService userService() {
         UserService userService = new UserService();
         userService.setUserDao(userDao());
         userService.setTransactionManager(new DataSourceTransactionManager(dataSource()));
+        userService.setMailSender(mailSender());
         return userService;
     }
 }
