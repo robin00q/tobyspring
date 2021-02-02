@@ -30,19 +30,30 @@ public class UserService {
         this.transactionManager = transactionManager;
     }
 
+    public void add(User user) {
+        if(user.getLevel() == null) {
+            user.setLevel(Level.BASIC);
+        }
+        userDao.add(user);
+    }
+
     public void upgradeLevels() {
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
-            List<User> users = userDao.getAll();
-            for (User user : users) {
-                if(canUpgradeLevel(user)) {
-                    upgradeLevel(user);
-                }
-            }
+            upgradeLevelsInternal();
             transactionManager.commit(status);
         } catch (RuntimeException e) {
             transactionManager.rollback(status);
             throw e;
+        }
+    }
+
+    private void upgradeLevelsInternal() {
+        List<User> users = userDao.getAll();
+        for (User user : users) {
+            if(canUpgradeLevel(user)) {
+                upgradeLevel(user);
+            }
         }
     }
 
@@ -60,13 +71,6 @@ public class UserService {
             case GOLD: return false;
             default: throw new IllegalArgumentException("Unknown Level: " + currentLevel);
         }
-    }
-
-    public void add(User user) {
-        if(user.getLevel() == null) {
-            user.setLevel(Level.BASIC);
-        }
-        userDao.add(user);
     }
 
     private void sendUpgradeEmail(User user) {
