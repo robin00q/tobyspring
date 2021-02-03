@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
+import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.mail.DummyMailSender;
 
 import javax.sql.DataSource;
@@ -43,11 +44,23 @@ public class DaoFactory {
     }
 
     @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+
+    @Bean
+    public UserServiceImpl userServiceImpl() {
+        UserServiceImpl userServiceImpl = new UserServiceImpl();
+        userServiceImpl.setUserDao(userDao());
+        userServiceImpl.setMailSender(mailSender());
+        return userServiceImpl;
+    }
+
+    @Bean
     public UserService userService() {
-        UserService userService = new UserService();
-        userService.setUserDao(userDao());
-        userService.setTransactionManager(new DataSourceTransactionManager(dataSource()));
-        userService.setMailSender(mailSender());
-        return userService;
+        UserServiceTx userServiceTx = new UserServiceTx();
+        userServiceTx.setUserService(userServiceImpl());
+        userServiceTx.setTransactionManager(transactionManager());
+        return userServiceTx;
     }
 }
