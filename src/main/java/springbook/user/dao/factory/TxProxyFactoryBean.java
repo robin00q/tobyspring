@@ -10,10 +10,10 @@ import java.lang.reflect.Proxy;
 @Setter
 public class TxProxyFactoryBean implements FactoryBean<Object> {
 
-    Object target;
+    Object target; // 실제 기능 수행하는 impl
     PlatformTransactionManager transactionManager;
     String pattern;
-    Class<?> serviceInterface;
+    Class<?> serviceInterface; // Bean 등록 타입
 
     @Override
     public Object getObject() {
