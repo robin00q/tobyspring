@@ -260,6 +260,11 @@ class UserServiceImplTest {
                 txHandler
         );
 
+        userDao.deleteAll();
+        for (User user : users) {
+            userDao.add(user);
+        }
+
         assertThrows(TestUserServiceException.class, () -> txUserService.upgradeLevels());
 
         checkLevelUpgraded(users.get(1), false);
