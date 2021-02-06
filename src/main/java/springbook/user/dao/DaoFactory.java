@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
+import springbook.user.dao.factory.TxProxyFactoryBean;
 import springbook.user.mail.DummyMailSender;
 
 import javax.sql.DataSource;
@@ -57,10 +58,13 @@ public class DaoFactory {
     }
 
     @Bean
-    public UserService userService() {
-        UserServiceTx userServiceTx = new UserServiceTx();
-        userServiceTx.setUserService(userServiceImpl());
-        userServiceTx.setTransactionManager(transactionManager());
-        return userServiceTx;
+    public TxProxyFactoryBean userService() {
+        TxProxyFactoryBean txProxyFactoryBean = new TxProxyFactoryBean();
+        txProxyFactoryBean.setServiceInterface(UserService.class);
+        txProxyFactoryBean.setPattern("upgradeLevels");
+        txProxyFactoryBean.setTransactionManager(transactionManager());
+        txProxyFactoryBean.setTarget(userServiceImpl());
+
+        return txProxyFactoryBean;
     }
 }
