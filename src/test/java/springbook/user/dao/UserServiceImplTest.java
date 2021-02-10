@@ -3,6 +3,7 @@ package springbook.user.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
@@ -11,7 +12,6 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.PlatformTransactionManager;
-import springbook.user.dao.factory.TxProxyFactoryBean;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
@@ -253,10 +253,9 @@ class UserServiceImplTest {
         testUserService.setUserDao(userDao);
         testUserService.setMailSender(mailSender);
 
-        TxProxyFactoryBean txProxyFactoryBean
-                = applicationContext.getBean("&userService", TxProxyFactoryBean.class);
-        txProxyFactoryBean.setTarget(testUserService);
-        UserService txUserService = (UserService) txProxyFactoryBean.getObject();
+        ProxyFactoryBean userService = applicationContext.getBean("&userService", ProxyFactoryBean.class);
+        userService.setTarget(testUserService);
+        UserService txUserService = (UserService) userService.getObject();
 
         userDao.deleteAll();
         for (User user : users) {

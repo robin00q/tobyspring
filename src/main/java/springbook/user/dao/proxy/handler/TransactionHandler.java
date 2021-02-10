@@ -1,4 +1,4 @@
-package springbook.user.dao.handler;
+package springbook.user.dao.proxy.handler;
 
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;

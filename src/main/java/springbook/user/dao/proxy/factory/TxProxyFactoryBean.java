@@ -1,9 +1,9 @@
-package springbook.user.dao.factory;
+package springbook.user.dao.proxy.factory;
 
 import lombok.Setter;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
-import springbook.user.dao.handler.TransactionHandler;
+import springbook.user.dao.proxy.handler.TransactionHandler;
 
 import java.lang.reflect.Proxy;
 
