@@ -1,6 +1,7 @@
 package springbook.user.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +10,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.proxy.advice.TransactionAdvice;
-import springbook.user.dao.proxy.pointcut.NameMatchClassMethodPointcut;
 import springbook.user.mail.DummyMailSender;
 
 import javax.sql.DataSource;
@@ -65,10 +65,9 @@ public class DaoFactory {
     }
 
     @Bean
-    public NameMatchClassMethodPointcut transactionPointCut() {
-        NameMatchClassMethodPointcut pointcut = new NameMatchClassMethodPointcut();
-        pointcut.setMappedName("upgrade*");
-        pointcut.setMappedClassName("*ServiceImpl");
+    public AspectJExpressionPointcut transactionPointCut() {
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+        pointcut.setExpression("execution(* *..*ServiceImpl.upgrade*(..))");
         return pointcut;
     }
 
