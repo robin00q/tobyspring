@@ -1,15 +1,15 @@
 package springbook.user.dao;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
-import org.springframework.aop.support.NameMatchMethodPointcut;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.proxy.advice.TransactionAdvice;
+import springbook.user.dao.proxy.pointcut.NameMatchClassMethodPointcut;
 import springbook.user.mail.DummyMailSender;
 
 import javax.sql.DataSource;
@@ -41,9 +41,6 @@ public class DaoFactory {
 
     @Bean
     public MailSender mailSender() {
-//        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-//        mailSender.setHost("mail.server.com");
-//        return mailSender;
         return new DummyMailSender();
     }
 
@@ -53,20 +50,11 @@ public class DaoFactory {
     }
 
     @Bean
-    public UserServiceImpl userServiceImpl() {
+    public UserServiceImpl userService() {
         UserServiceImpl userServiceImpl = new UserServiceImpl();
         userServiceImpl.setUserDao(userDao());
         userServiceImpl.setMailSender(mailSender());
         return userServiceImpl;
-    }
-
-    @Bean
-    public ProxyFactoryBean userService() {
-        ProxyFactoryBean pfBean = new ProxyFactoryBean();
-        pfBean.setTarget(userServiceImpl());
-        pfBean.addAdvisor(transactionAdvisor());
-
-        return pfBean;
     }
 
     @Bean
@@ -77,14 +65,20 @@ public class DaoFactory {
     }
 
     @Bean
-    public NameMatchMethodPointcut transactionPointCut() {
-        NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
+    public NameMatchClassMethodPointcut transactionPointCut() {
+        NameMatchClassMethodPointcut pointcut = new NameMatchClassMethodPointcut();
         pointcut.setMappedName("upgrade*");
+        pointcut.setMappedClassName("*ServiceImpl");
         return pointcut;
     }
 
     @Bean
     public DefaultPointcutAdvisor transactionAdvisor() {
         return new DefaultPointcutAdvisor(transactionPointCut(), transactionAdvice());
+    }
+
+    @Bean
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        return new DefaultAdvisorAutoProxyCreator();
     }
 }

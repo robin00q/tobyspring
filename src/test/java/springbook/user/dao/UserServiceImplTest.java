@@ -3,24 +3,26 @@ package springbook.user.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -30,10 +32,14 @@ import static springbook.user.dao.UserServiceImpl.MIN_LOGOUT_FOR_SILVER;
 import static springbook.user.dao.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 
 @SpringBootTest
+public
 class UserServiceImplTest {
 
     @Autowired
-    UserServiceImpl userServiceImpl;
+    UserService userService;
+
+    @Autowired
+    UserService testUserService;
 
     @Autowired
     UserDao userDao;
@@ -68,8 +74,8 @@ class UserServiceImplTest {
         User userWithoutLevel = users.get(0);
         userWithoutLevel.setLevel(null);
 
-        userServiceImpl.add(userWithLevel);
-        userServiceImpl.add(userWithoutLevel);
+        userService.add(userWithLevel);
+        userService.add(userWithoutLevel);
 
         User userWithLevelRead = userDao.get(userWithLevel.getId());
         User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
@@ -178,7 +184,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DirtiesContext
     void upgradeLevels() {
         userDao.deleteAll();
         for(User user : users) {
@@ -186,9 +191,11 @@ class UserServiceImplTest {
         }
 
         MockMailSender mockMailSender = new MockMailSender();
-        userServiceImpl.setMailSender(mockMailSender);
+        UserServiceImpl userService = new UserServiceImpl();
+        userService.setMailSender(mockMailSender);
+        userService.setUserDao(userDao);
 
-        userServiceImpl.upgradeLevels();
+        userService.upgradeLevels();
 
         checkLevelUpgraded(users.get(0), false);
         checkLevelUpgraded(users.get(1), true);
@@ -211,13 +218,41 @@ class UserServiceImplTest {
         }
     }
 
-    static class TestUserService extends UserServiceImpl {
-        private String id;
-
-        public TestUserService(String id) {
-            this.id = id;
+    @Test
+    void upgradeAllOrNothing() {
+        userDao.deleteAll();
+        for (User user : users) {
+            userDao.add(user);
         }
 
+        try {
+            testUserService.upgradeLevels();
+            fail("TestUserServiceException expected");
+        } catch(TestUserServiceException e) {
+        }
+
+        checkLevelUpgraded(users.get(1), false);
+    }
+
+    @TestConfiguration
+    static class TestConfig {
+        @Autowired
+        UserDao userDao;
+
+        @Autowired
+        MailSender mailSender;
+
+        @Bean
+        public TestUserServiceImpl testUserService() {
+            TestUserServiceImpl testUserService = new TestUserServiceImpl();
+            testUserService.setUserDao(userDao);
+            testUserService.setMailSender(mailSender);
+            return testUserService;
+        }
+    }
+
+    static class TestUserServiceImpl extends UserServiceImpl {
+        private String id = "user4";
         protected void upgradeLevel(User user) {
             if(user.getId().equals(this.id)) throw new TestUserServiceException();
             super.upgradeLevel(user);
@@ -228,7 +263,6 @@ class UserServiceImplTest {
     }
 
     static class MockMailSender implements MailSender {
-
         private List<String> requests = new ArrayList<>();
 
         public List<String> getRequests() {
@@ -239,31 +273,13 @@ class UserServiceImplTest {
         public void send(SimpleMailMessage simpleMessage) throws MailException {
             requests.add(simpleMessage.getTo()[0]);
         }
-
         @Override
         public void send(SimpleMailMessage... simpleMessages) throws MailException {
-
         }
     }
 
     @Test
-    @DirtiesContext
-    void upgradeAllOrNothing() {
-        TestUserService testUserService = new TestUserService(users.get(3).getId());
-        testUserService.setUserDao(userDao);
-        testUserService.setMailSender(mailSender);
-
-        ProxyFactoryBean userService = applicationContext.getBean("&userService", ProxyFactoryBean.class);
-        userService.setTarget(testUserService);
-        UserService txUserService = (UserService) userService.getObject();
-
-        userDao.deleteAll();
-        for (User user : users) {
-            userDao.add(user);
-        }
-
-        assertThrows(TestUserServiceException.class, () -> txUserService.upgradeLevels());
-
-        checkLevelUpgraded(users.get(1), false);
+    void advisorAutoProxyCreator() {
+        assertTrue(testUserService instanceof Proxy);
     }
 }
