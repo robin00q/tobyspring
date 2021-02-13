@@ -35,7 +35,6 @@ import static springbook.user.dao.UserServiceImpl.MIN_LOGOUT_FOR_SILVER;
 import static springbook.user.dao.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 
 @SpringBootTest
-@Transactional
 class UserServiceImplTest {
 
     @Autowired
@@ -232,6 +231,7 @@ class UserServiceImplTest {
             testUserService.upgradeLevels();
             fail("TestUserServiceException expected");
         } catch(TestUserServiceException e) {
+            System.out.println("catched Exception");
         }
 
         checkLevelUpgraded(users.get(1), false);

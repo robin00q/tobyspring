@@ -1,4 +1,4 @@
-package springbook.user.dao.proxy.pointcut;
+package springbook.user.proxy.pointcut;
 
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.support.NameMatchMethodPointcut;

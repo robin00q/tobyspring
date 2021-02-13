@@ -8,6 +8,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.mail.DummyMailSender;
+import springbook.user.sqlservice.SimpleSqlService;
+import springbook.user.sqlservice.SqlService;
 
 import javax.sql.DataSource;
 
@@ -37,6 +39,7 @@ public class DaoFactory {
     public UserDao userDao() {
         UserDaoJdbc userDao = new UserDaoJdbc();
         userDao.setDataSource(dataSource());
+        userDao.setSqlService(sqlService());
         return userDao;
     }
 
@@ -56,6 +59,19 @@ public class DaoFactory {
         userServiceImpl.setUserDao(userDao());
         userServiceImpl.setMailSender(mailSender());
         return userServiceImpl;
+    }
+
+    @Bean
+    public SqlService sqlService() {
+        SimpleSqlService simpleSqlService = new SimpleSqlService();
+        simpleSqlService.getSqlMap().put("userAdd", "insert into users(id, name, email, password, level, login, recommend) values (?, ?, ?, ?, ?, ?, ?)");
+        simpleSqlService.getSqlMap().put("userGet", "select * from users where id = ?");
+        simpleSqlService.getSqlMap().put("userDeleteAll", "delete from users");
+        simpleSqlService.getSqlMap().put("userGetCount", "select count(*) from users");
+        simpleSqlService.getSqlMap().put("userUpdate", "update users set name = ?, email = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?");
+        simpleSqlService.getSqlMap().put("userGetAll", "select * from users order by id");
+
+        return simpleSqlService;
     }
 
 //    @Bean
