@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -234,6 +236,15 @@ class UserServiceImplTest {
         checkLevelUpgraded(users.get(1), false);
     }
 
+    @Test
+    void readOnlyTransactionAttribute() {
+        testUserService.deleteAll();
+        for(User user : users) {
+            testUserService.add(user);
+        }
+        assertThrows(TransientDataAccessResourceException.class, () -> testUserService.getAll());
+    }
+
     @TestConfiguration
     static class TestConfig {
         @Autowired
@@ -243,19 +254,26 @@ class UserServiceImplTest {
         MailSender mailSender;
 
         @Bean
-        public TestUserServiceImpl testUserService() {
-            TestUserServiceImpl testUserService = new TestUserServiceImpl();
+        public TestUserService testUserService() {
+            TestUserService testUserService = new TestUserService();
             testUserService.setUserDao(userDao);
             testUserService.setMailSender(mailSender);
             return testUserService;
         }
     }
 
-    static class TestUserServiceImpl extends UserServiceImpl {
+    static class TestUserService extends UserServiceImpl {
         private String id = "user4";
         protected void upgradeLevel(User user) {
             if(user.getId().equals(this.id)) throw new TestUserServiceException();
             super.upgradeLevel(user);
+        }
+
+        public List<User> getAll() {
+            for(User user : super.getAll()) {
+                super.update(user);
+            }
+            return null;
         }
     }
 

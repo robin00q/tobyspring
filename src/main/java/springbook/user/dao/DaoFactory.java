@@ -9,11 +9,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
+import org.springframework.transaction.interceptor.NameMatchTransactionAttributeSource;
+import org.springframework.transaction.interceptor.TransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import springbook.user.mail.DummyMailSender;
 
 import javax.sql.DataSource;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class DaoFactory {
@@ -26,10 +31,14 @@ public class DaoFactory {
     @Bean
     public DataSource dataSource() {
         HikariDataSource hikariDataSource = new HikariDataSource();
-        hikariDataSource.setDriverClassName("org.h2.Driver");
-        hikariDataSource.setJdbcUrl("jdbc:h2:tcp://localhost/~/tobyspring");
-        hikariDataSource.setUsername("sa");
-        hikariDataSource.setPassword("");
+//        hikariDataSource.setDriverClassName("org.h2.Driver");
+//        hikariDataSource.setJdbcUrl("jdbc:h2:tcp://localhost/~/tobyspring");
+//        hikariDataSource.setUsername("sa");
+//        hikariDataSource.setPassword("");
+        hikariDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        hikariDataSource.setJdbcUrl("jdbc:mysql://localhost:3306/tobyspring?serverTimezone=UTC&characterEncoding=UTF-8");
+        hikariDataSource.setUsername("root");
+        hikariDataSource.setPassword("123123");
         return hikariDataSource;
     }
 
@@ -66,13 +75,22 @@ public class DaoFactory {
 //    }
     @Bean
     public TransactionInterceptor transactionAdvice() {
-        Properties properties = new Properties();
-        properties.put("get*", "PROPAGATION_REQUIRED,readOnly");
-        properties.put("*", "PROPAGATION_REQUIRED");
+        DefaultTransactionAttribute get = new DefaultTransactionAttribute();
+        get.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        get.setReadOnly(true);
+
+        DefaultTransactionAttribute all = new DefaultTransactionAttribute();
+        all.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+        Map<String, TransactionAttribute> txMap = new HashMap<>(20);
+        txMap.put("get*", get);
+        txMap.put("*", all);
+        NameMatchTransactionAttributeSource nmt = new NameMatchTransactionAttributeSource();
+        nmt.setNameMap(txMap);
 
         TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
         transactionInterceptor.setTransactionManager(transactionManager());
-        transactionInterceptor.setTransactionAttributes(properties);
+        transactionInterceptor.setTransactionAttributeSource(nmt);
         return transactionInterceptor;
     }
 

@@ -20,6 +20,7 @@ dependencies {
 
     // h2
     runtimeOnly 'com.h2database:h2:1.4.200'
+    runtimeOnly 'mysql:mysql-connector-java'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
