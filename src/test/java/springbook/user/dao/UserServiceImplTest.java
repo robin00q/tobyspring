@@ -13,6 +13,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
@@ -34,7 +35,7 @@ import static springbook.user.dao.UserServiceImpl.MIN_LOGOUT_FOR_SILVER;
 import static springbook.user.dao.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 
 @SpringBootTest
-public
+@Transactional
 class UserServiceImplTest {
 
     @Autowired
@@ -260,6 +261,14 @@ class UserServiceImplTest {
             testUserService.setMailSender(mailSender);
             return testUserService;
         }
+    }
+
+    @Test
+    @Transactional
+    void transactionSync() {
+        userService.deleteAll();
+        userService.add(users.get(0));
+        userService.add(users.get(1));
     }
 
     static class TestUserService extends UserServiceImpl {
