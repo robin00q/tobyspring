@@ -14,11 +14,13 @@ repositories {
 dependencies {
     // springBoot
     implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation "org.springframework.boot:spring-boot-starter-jdbc"
     implementation "org.springframework.boot:spring-boot-starter-mail"
 
     // h2
     runtimeOnly 'com.h2database:h2:1.4.200'
+    runtimeOnly 'mysql:mysql-connector-java'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
