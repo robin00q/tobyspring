@@ -280,6 +280,7 @@ class UserServiceImplTest {
 
     @Test
     void advisorAutoProxyCreator() {
+        applicationContext.getBean("testUserService", Proxy.class);
         assertTrue(testUserService instanceof Proxy);
     }
 }

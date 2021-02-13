@@ -9,10 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
-import springbook.user.dao.proxy.advice.TransactionAdvice;
+import org.springframework.transaction.interceptor.TransactionInterceptor;
 import springbook.user.mail.DummyMailSender;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 @Configuration
 public class DaoFactory {
@@ -57,17 +58,29 @@ public class DaoFactory {
         return userServiceImpl;
     }
 
+//    @Bean
+//    public TransactionAdvice transactionAdvice() {
+//        TransactionAdvice transactionAdvice = new TransactionAdvice();
+//        transactionAdvice.setTransactionManager(transactionManager());
+//        return transactionAdvice;
+//    }
     @Bean
-    public TransactionAdvice transactionAdvice() {
-        TransactionAdvice transactionAdvice = new TransactionAdvice();
-        transactionAdvice.setTransactionManager(transactionManager());
-        return transactionAdvice;
+    public TransactionInterceptor transactionAdvice() {
+        Properties properties = new Properties();
+        properties.put("get*", "PROPAGATION_REQUIRED,readOnly");
+        properties.put("*", "PROPAGATION_REQUIRED");
+
+        TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
+        transactionInterceptor.setTransactionManager(transactionManager());
+        transactionInterceptor.setTransactionAttributes(properties);
+        return transactionInterceptor;
     }
 
     @Bean
     public AspectJExpressionPointcut transactionPointCut() {
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
-        pointcut.setExpression("execution(* *..*ServiceImpl.upgrade*(..))");
+//        pointcut.setExpression("execution(* *..*ServiceImpl.upgrade*(..))");
+        pointcut.setExpression("bean(*Service)");
         return pointcut;
     }
 
