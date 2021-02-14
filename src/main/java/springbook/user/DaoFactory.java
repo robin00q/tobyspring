@@ -68,15 +68,9 @@ public class DaoFactory {
 
     @Bean
     public SqlService sqlService() {
-//        SimpleSqlService simpleSqlService = new SimpleSqlService();
-//        simpleSqlService.getSqlMap().put("userAdd", "insert into users(id, name, email, password, level, login, recommend) values (?, ?, ?, ?, ?, ?, ?)");
-//        simpleSqlService.getSqlMap().put("userGet", "select * from users where id = ?");
-//        simpleSqlService.getSqlMap().put("userDeleteAll", "delete from users");
-//        simpleSqlService.getSqlMap().put("userGetCount", "select count(*) from users");
-//        simpleSqlService.getSqlMap().put("userUpdate", "update users set name = ?, email = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?");
-//        simpleSqlService.getSqlMap().put("userGetAll", "select * from users order by id");
-//        return simpleSqlService;
-        return new XmlSqlService();
+        XmlSqlService sqlProvider = new XmlSqlService();
+        sqlProvider.setSqlmapFile("/sqlmap.xml");
+        return sqlProvider;
     }
 
 
