@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.oxm.Unmarshaller;
@@ -72,6 +73,7 @@ public class DaoFactory {
     public SqlService sqlService() {
         OxmSqlService oxmSqlService = new OxmSqlService();
         oxmSqlService.setUnmarshaller(unmarshaller());
+        oxmSqlService.setSqlmap(new ClassPathResource("/sqlmap.xml"));
         return oxmSqlService;
     }
 
