@@ -13,6 +13,10 @@ import springbook.user.dao.UserDao;
 import springbook.user.dao.UserDaoJdbc;
 import springbook.user.dao.UserServiceImpl;
 import springbook.user.mail.DummyMailSender;
+import springbook.user.sqlservice.HashMapSqlRegistry;
+import springbook.user.sqlservice.JaxbXmlSqlReader;
+import springbook.user.sqlservice.SqlReader;
+import springbook.user.sqlservice.SqlRegistry;
 import springbook.user.sqlservice.SqlService;
 import springbook.user.sqlservice.XmlSqlService;
 
@@ -67,11 +71,22 @@ public class DaoFactory {
     }
 
     @Bean
+    public SqlReader sqlReader() {
+        JaxbXmlSqlReader jaxbXmlSqlReader = new JaxbXmlSqlReader();
+        jaxbXmlSqlReader.setSqlmapFile("/sqlmap.xml");
+        return jaxbXmlSqlReader;
+    }
+
+    @Bean
+    public SqlRegistry sqlRegistry() {
+        return new HashMapSqlRegistry();
+    }
+
+    @Bean
     public SqlService sqlService() {
         XmlSqlService sqlProvider = new XmlSqlService();
-        sqlProvider.setSqlmapFile("/sqlmap.xml");
-        sqlProvider.setSqlReader(sqlProvider);
-        sqlProvider.setSqlRegistry(sqlProvider);
+        sqlProvider.setSqlReader(sqlReader());
+        sqlProvider.setSqlRegistry(sqlRegistry());
         return sqlProvider;
     }
 
