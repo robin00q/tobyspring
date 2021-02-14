@@ -70,42 +70,11 @@ public class DaoFactory {
     public SqlService sqlService() {
         XmlSqlService sqlProvider = new XmlSqlService();
         sqlProvider.setSqlmapFile("/sqlmap.xml");
+        sqlProvider.setSqlReader(sqlProvider);
+        sqlProvider.setSqlRegistry(sqlProvider);
         return sqlProvider;
     }
 
-
-//    @Bean
-//    public TransactionInterceptor transactionAdvice() {
-//        DefaultTransactionAttribute get = new DefaultTransactionAttribute();
-//        get.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-//        get.setReadOnly(true);
-//
-//        DefaultTransactionAttribute all = new DefaultTransactionAttribute();
-//        all.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-//
-//        Map<String, TransactionAttribute> txMap = new HashMap<>(20);
-//        txMap.put("get*", get);
-//        txMap.put("*", all);
-//        NameMatchTransactionAttributeSource nmt = new NameMatchTransactionAttributeSource();
-//        nmt.setNameMap(txMap);
-//
-//        TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
-//        transactionInterceptor.setTransactionManager(transactionManager());
-//        transactionInterceptor.setTransactionAttributeSource(nmt);
-//        return transactionInterceptor;
-//    }
-//
-//    @Bean
-//    public AspectJExpressionPointcut transactionPointCut() {
-//        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
-//        pointcut.setExpression("bean(*Service)");
-//        return pointcut;
-//    }
-//
-//    @Bean
-//    public DefaultPointcutAdvisor transactionAdvisor() {
-//        return new DefaultPointcutAdvisor(transactionPointCut(), transactionAdvice());
-//    }
 
     @Bean
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
