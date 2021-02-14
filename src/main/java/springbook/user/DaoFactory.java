@@ -1,4 +1,4 @@
-package springbook.user.dao;
+package springbook.user;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -7,9 +7,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
+import springbook.user.dao.ConnectionMaker;
+import springbook.user.dao.DConnectionMaker;
+import springbook.user.dao.UserDao;
+import springbook.user.dao.UserDaoJdbc;
+import springbook.user.dao.UserServiceImpl;
 import springbook.user.mail.DummyMailSender;
-import springbook.user.sqlservice.SimpleSqlService;
 import springbook.user.sqlservice.SqlService;
+import springbook.user.sqlservice.XmlSqlService;
 
 import javax.sql.DataSource;
 
@@ -63,16 +68,17 @@ public class DaoFactory {
 
     @Bean
     public SqlService sqlService() {
-        SimpleSqlService simpleSqlService = new SimpleSqlService();
-        simpleSqlService.getSqlMap().put("userAdd", "insert into users(id, name, email, password, level, login, recommend) values (?, ?, ?, ?, ?, ?, ?)");
-        simpleSqlService.getSqlMap().put("userGet", "select * from users where id = ?");
-        simpleSqlService.getSqlMap().put("userDeleteAll", "delete from users");
-        simpleSqlService.getSqlMap().put("userGetCount", "select count(*) from users");
-        simpleSqlService.getSqlMap().put("userUpdate", "update users set name = ?, email = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?");
-        simpleSqlService.getSqlMap().put("userGetAll", "select * from users order by id");
-
-        return simpleSqlService;
+//        SimpleSqlService simpleSqlService = new SimpleSqlService();
+//        simpleSqlService.getSqlMap().put("userAdd", "insert into users(id, name, email, password, level, login, recommend) values (?, ?, ?, ?, ?, ?, ?)");
+//        simpleSqlService.getSqlMap().put("userGet", "select * from users where id = ?");
+//        simpleSqlService.getSqlMap().put("userDeleteAll", "delete from users");
+//        simpleSqlService.getSqlMap().put("userGetCount", "select count(*) from users");
+//        simpleSqlService.getSqlMap().put("userUpdate", "update users set name = ?, email = ?, password = ?, level = ?, login = ?, recommend = ? where id = ?");
+//        simpleSqlService.getSqlMap().put("userGetAll", "select * from users order by id");
+//        return simpleSqlService;
+        return new XmlSqlService();
     }
+
 
 //    @Bean
 //    public TransactionInterceptor transactionAdvice() {
