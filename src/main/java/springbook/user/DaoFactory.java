@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.mail.MailSender;
+import org.springframework.oxm.Unmarshaller;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.ConnectionMaker;
 import springbook.user.dao.DConnectionMaker;
@@ -13,7 +15,7 @@ import springbook.user.dao.UserDao;
 import springbook.user.dao.UserDaoJdbc;
 import springbook.user.dao.UserServiceImpl;
 import springbook.user.mail.DummyMailSender;
-import springbook.user.sqlservice.DefaultSqlService;
+import springbook.user.sqlservice.OxmSqlService;
 import springbook.user.sqlservice.SqlService;
 
 import javax.sql.DataSource;
@@ -68,7 +70,16 @@ public class DaoFactory {
 
     @Bean
     public SqlService sqlService() {
-        return new DefaultSqlService();
+        OxmSqlService oxmSqlService = new OxmSqlService();
+        oxmSqlService.setUnmarshaller(unmarshaller());
+        return oxmSqlService;
+    }
+
+    @Bean
+    public Unmarshaller unmarshaller() {
+        Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
+        jaxb2Marshaller.setContextPath("springbook.user.sqlservice.jaxb");
+        return jaxb2Marshaller;
     }
 
 

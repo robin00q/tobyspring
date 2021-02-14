@@ -15,12 +15,12 @@ dependencies {
     // springBoot
     implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springframework.boot:spring-boot-starter-aop"
+    implementation "org.springframework:spring-oxm:5.2.11.RELEASE"
     implementation "org.springframework.boot:spring-boot-starter-jdbc"
     implementation "org.springframework.boot:spring-boot-starter-mail"
     implementation "javax.xml.bind:jaxb-api:2.3.1"
     implementation "javax.activation:activation:1.1.1"
     implementation "org.glassfish.jaxb:jaxb-runtime:2.3.1"
-
 
     // h2
     runtimeOnly 'com.h2database:h2:1.4.200'
