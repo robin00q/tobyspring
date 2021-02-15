@@ -16,7 +16,9 @@ import springbook.user.dao.UserDao;
 import springbook.user.dao.UserDaoJdbc;
 import springbook.user.dao.UserServiceImpl;
 import springbook.user.mail.DummyMailSender;
+import springbook.user.sqlservice.ConcurrentHashMapSqlRegistry;
 import springbook.user.sqlservice.OxmSqlService;
+import springbook.user.sqlservice.SqlRegistry;
 import springbook.user.sqlservice.SqlService;
 
 import javax.sql.DataSource;
@@ -74,7 +76,13 @@ public class DaoFactory {
         OxmSqlService oxmSqlService = new OxmSqlService();
         oxmSqlService.setUnmarshaller(unmarshaller());
         oxmSqlService.setSqlmap(new ClassPathResource("/sqlmap.xml"));
+        oxmSqlService.setSqlRegistry(sqlRegistry());
         return oxmSqlService;
+    }
+
+    @Bean
+    public SqlRegistry sqlRegistry() {
+        return new ConcurrentHashMapSqlRegistry();
     }
 
     @Bean
