@@ -21,7 +21,7 @@ import springbook.user.dao.UserServiceImpl;
 import springbook.user.mail.DummyMailSender;
 import springbook.user.sqlservice.OxmSqlService;
 import springbook.user.sqlservice.SqlService;
-import springbook.user.sqlservice.sqlregistry.ConcurrentHashMapSqlRegistry;
+import springbook.user.sqlservice.sqlregistry.EmbeddedSqlRegistry;
 import springbook.user.sqlservice.sqlregistry.SqlRegistry;
 
 import javax.sql.DataSource;
@@ -46,14 +46,6 @@ public class DaoFactory {
         hikariDataSource.setUsername("root");
         hikariDataSource.setPassword("123123");
         return hikariDataSource;
-    }
-
-    @Bean
-    public EmbeddedDatabase embeddedDatabase() {
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .addScript("classpath:/schema.sql")
-                .build();
     }
 
     @Bean
@@ -93,7 +85,13 @@ public class DaoFactory {
 
     @Bean
     public SqlRegistry sqlRegistry() {
-        return new ConcurrentHashMapSqlRegistry();
+        EmbeddedDatabase db = new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .addScript("classpath:/schema.sql")
+                .build();
+        EmbeddedSqlRegistry embeddedSqlRegistry = new EmbeddedSqlRegistry();
+        embeddedSqlRegistry.setDataSource(db);
+        return embeddedSqlRegistry;
     }
 
     @Bean
