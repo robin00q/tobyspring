@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.mail.MailSender;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -16,10 +19,10 @@ import springbook.user.dao.UserDao;
 import springbook.user.dao.UserDaoJdbc;
 import springbook.user.dao.UserServiceImpl;
 import springbook.user.mail.DummyMailSender;
-import springbook.user.sqlservice.ConcurrentHashMapSqlRegistry;
 import springbook.user.sqlservice.OxmSqlService;
-import springbook.user.sqlservice.SqlRegistry;
 import springbook.user.sqlservice.SqlService;
+import springbook.user.sqlservice.sqlregistry.ConcurrentHashMapSqlRegistry;
+import springbook.user.sqlservice.sqlregistry.SqlRegistry;
 
 import javax.sql.DataSource;
 
@@ -43,6 +46,14 @@ public class DaoFactory {
         hikariDataSource.setUsername("root");
         hikariDataSource.setPassword("123123");
         return hikariDataSource;
+    }
+
+    @Bean
+    public EmbeddedDatabase embeddedDatabase() {
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .addScript("classpath:/schema.sql")
+                .build();
     }
 
     @Bean

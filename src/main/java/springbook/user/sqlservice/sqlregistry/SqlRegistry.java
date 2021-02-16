@@ -1,4 +1,4 @@
-package springbook.user.sqlservice;
+package springbook.user.sqlservice.sqlregistry;
 
 import springbook.user.exception.SqlNotFoundException;
 

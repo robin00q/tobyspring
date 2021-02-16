@@ -3,6 +3,8 @@ package springbook.user.sqlservice;
 import lombok.Setter;
 import springbook.user.exception.SqlNotFoundException;
 import springbook.user.exception.SqlRetrievalFailureException;
+import springbook.user.sqlservice.sqlreader.SqlReader;
+import springbook.user.sqlservice.sqlregistry.SqlRegistry;
 
 import javax.annotation.PostConstruct;
 

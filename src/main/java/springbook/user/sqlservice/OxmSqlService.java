@@ -5,6 +5,9 @@ import org.springframework.oxm.Unmarshaller;
 import springbook.user.exception.SqlRetrievalFailureException;
 import springbook.user.sqlservice.jaxb.SqlType;
 import springbook.user.sqlservice.jaxb.Sqlmap;
+import springbook.user.sqlservice.sqlreader.SqlReader;
+import springbook.user.sqlservice.sqlregistry.HashMapSqlRegistry;
+import springbook.user.sqlservice.sqlregistry.SqlRegistry;
 
 import javax.annotation.PostConstruct;
 import javax.xml.transform.Source;
