@@ -247,7 +247,7 @@ class UserServiceImplTest {
     }
 
     @TestConfiguration
-    static class TestConfig {
+    public static class TestConfig {
         @Autowired
         UserDao userDao;
 

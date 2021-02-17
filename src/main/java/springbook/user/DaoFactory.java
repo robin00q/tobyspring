@@ -88,6 +88,7 @@ public class DaoFactory {
         EmbeddedDatabase db = new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
                 .addScript("classpath:/schema.sql")
+                .addScript("classpath:/data.sql")
                 .build();
         EmbeddedSqlRegistry embeddedSqlRegistry = new EmbeddedSqlRegistry();
         embeddedSqlRegistry.setDataSource(db);
