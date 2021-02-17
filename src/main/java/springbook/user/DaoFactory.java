@@ -2,6 +2,7 @@ package springbook.user;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -16,7 +17,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.ConnectionMaker;
 import springbook.user.dao.DConnectionMaker;
 import springbook.user.dao.UserDao;
-import springbook.user.dao.UserDaoJdbc;
 import springbook.user.dao.UserServiceImpl;
 import springbook.user.mail.DummyMailSender;
 import springbook.user.sqlservice.OxmSqlService;
@@ -27,7 +27,11 @@ import springbook.user.sqlservice.sqlregistry.SqlRegistry;
 import javax.sql.DataSource;
 
 @Configuration
+//@ComponentScan(basePackages = "springbook.user") -> TobyApplication.class 의 @SpringbootApplication 을 통해 설정
 public class DaoFactory {
+
+    @Autowired
+    UserDao userDao;
 
     @Bean
     public ConnectionMaker connectionMaker() {
@@ -48,13 +52,13 @@ public class DaoFactory {
         return hikariDataSource;
     }
 
-    @Bean
-    public UserDao userDao() {
-        UserDaoJdbc userDao = new UserDaoJdbc();
-//        userDao.setDataSource(dataSource());
-//        userDao.setSqlService(sqlService());
-        return userDao;
-    }
+//    @Bean
+//    public UserDao userDao() {
+//        UserDaoJdbc userDao = new UserDaoJdbc();
+////        userDao.setDataSource(dataSource());
+////        userDao.setSqlService(sqlService());
+//        return userDao;
+//    }
 
     @Bean
     public MailSender mailSender() {
@@ -69,7 +73,7 @@ public class DaoFactory {
     @Bean
     public UserServiceImpl userService() {
         UserServiceImpl userServiceImpl = new UserServiceImpl();
-        userServiceImpl.setUserDao(userDao());
+        userServiceImpl.setUserDao(userDao);
         userServiceImpl.setMailSender(mailSender());
         return userServiceImpl;
     }

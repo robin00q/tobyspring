@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.oxm.Unmarshaller;
-import springbook.user.DaoFactory;
+import springbook.user.TobyApplication;
 import springbook.user.sqlservice.jaxb.SqlType;
 import springbook.user.sqlservice.jaxb.Sqlmap;
 
@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(classes = DaoFactory.class)
+@SpringBootTest(classes = TobyApplication.class)
 class OxmTest {
 
     @Autowired
