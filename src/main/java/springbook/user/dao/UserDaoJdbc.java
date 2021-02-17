@@ -1,6 +1,7 @@
 
 package springbook.user.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import springbook.user.domain.Level;
@@ -13,6 +14,7 @@ import java.util.List;
 public class UserDaoJdbc implements UserDao {
 
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private SqlService sqlService;
 
     private RowMapper<User> userMapper = (rs, rowNum) -> {
@@ -27,12 +29,13 @@ public class UserDaoJdbc implements UserDao {
         return user;
     };
 
+    @Autowired
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
-    public void setSqlService(SqlService sqlService) {
-        this.sqlService = sqlService;
-    }
+//    public void setSqlService(SqlService sqlService) {
+//        this.sqlService = sqlService;
+//    }
 
     public void add(final User user) {
         this.jdbcTemplate.update(sqlService.getSql("userAdd"),
