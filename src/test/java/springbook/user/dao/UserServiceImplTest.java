@@ -5,11 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.dao.TransientDataAccessResourceException;
-import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -35,6 +32,7 @@ import static springbook.user.dao.UserServiceImpl.MIN_LOGOUT_FOR_SILVER;
 import static springbook.user.dao.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 
 @SpringBootTest
+public
 class UserServiceImplTest {
 
     @Autowired
@@ -246,22 +244,7 @@ class UserServiceImplTest {
         assertThrows(TransientDataAccessResourceException.class, () -> testUserService.getAll());
     }
 
-    @TestConfiguration
-    public static class TestConfig {
-        @Autowired
-        UserDao userDao;
 
-        @Autowired
-        MailSender mailSender;
-
-        @Bean
-        public TestUserService testUserService() {
-            TestUserService testUserService = new TestUserService();
-            testUserService.setUserDao(userDao);
-            testUserService.setMailSender(mailSender);
-            return testUserService;
-        }
-    }
 
     @Test
     @Transactional
@@ -271,39 +254,9 @@ class UserServiceImplTest {
         userService.add(users.get(1));
     }
 
-    static class TestUserService extends UserServiceImpl {
-        private String id = "user4";
-        protected void upgradeLevel(User user) {
-            if(user.getId().equals(this.id)) throw new TestUserServiceException();
-            super.upgradeLevel(user);
-        }
 
-        public List<User> getAll() {
-            for(User user : super.getAll()) {
-                super.update(user);
-            }
-            return null;
-        }
-    }
 
-    static class TestUserServiceException extends RuntimeException {
-    }
 
-    static class MockMailSender implements MailSender {
-        private List<String> requests = new ArrayList<>();
-
-        public List<String> getRequests() {
-            return requests;
-        }
-
-        @Override
-        public void send(SimpleMailMessage simpleMessage) throws MailException {
-            requests.add(simpleMessage.getTo()[0]);
-        }
-        @Override
-        public void send(SimpleMailMessage... simpleMessages) throws MailException {
-        }
-    }
 
     @Test
     void advisorAutoProxyCreator() {

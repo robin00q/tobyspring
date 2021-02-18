@@ -1,15 +1,21 @@
 package springbook.user.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Service;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 import java.util.List;
 
+@Service("userService")
 public class UserServiceImpl implements UserService{
 
+    @Autowired
     private UserDao userDao;
+
+    @Autowired
     private MailSender mailSender;
 
     public static final int MIN_LOGOUT_FOR_SILVER = 50;

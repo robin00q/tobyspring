@@ -17,7 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.ConnectionMaker;
 import springbook.user.dao.DConnectionMaker;
 import springbook.user.dao.UserDao;
-import springbook.user.dao.UserServiceImpl;
+import springbook.user.dao.UserService;
 import springbook.user.mail.DummyMailSender;
 import springbook.user.sqlservice.OxmSqlService;
 import springbook.user.sqlservice.SqlService;
@@ -28,10 +28,13 @@ import javax.sql.DataSource;
 
 @Configuration
 //@ComponentScan(basePackages = "springbook.user") -> TobyApplication.class 의 @SpringbootApplication 을 통해 설정
-public class DaoFactory {
+public class AppContext {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    UserService userService;
 
     @Bean
     public ConnectionMaker connectionMaker() {
@@ -52,14 +55,6 @@ public class DaoFactory {
         return hikariDataSource;
     }
 
-//    @Bean
-//    public UserDao userDao() {
-//        UserDaoJdbc userDao = new UserDaoJdbc();
-////        userDao.setDataSource(dataSource());
-////        userDao.setSqlService(sqlService());
-//        return userDao;
-//    }
-
     @Bean
     public MailSender mailSender() {
         return new DummyMailSender();
@@ -68,14 +63,6 @@ public class DaoFactory {
     @Bean
     public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
-    }
-
-    @Bean
-    public UserServiceImpl userService() {
-        UserServiceImpl userServiceImpl = new UserServiceImpl();
-        userServiceImpl.setUserDao(userDao);
-        userServiceImpl.setMailSender(mailSender());
-        return userServiceImpl;
     }
 
     @Bean
