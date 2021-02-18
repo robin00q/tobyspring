@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import springbook.user.domain.Level;
@@ -32,7 +33,7 @@ import static springbook.user.dao.UserServiceImpl.MIN_LOGOUT_FOR_SILVER;
 import static springbook.user.dao.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 
 @SpringBootTest
-public
+@ActiveProfiles("test")
 class UserServiceImplTest {
 
     @Autowired
@@ -244,8 +245,6 @@ class UserServiceImplTest {
         assertThrows(TransientDataAccessResourceException.class, () -> testUserService.getAll());
     }
 
-
-
     @Test
     @Transactional
     void transactionSync() {
@@ -253,10 +252,6 @@ class UserServiceImplTest {
         userService.add(users.get(0));
         userService.add(users.get(1));
     }
-
-
-
-
 
     @Test
     void advisorAutoProxyCreator() {

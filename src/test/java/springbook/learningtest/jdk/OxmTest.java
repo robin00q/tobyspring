@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.test.context.ActiveProfiles;
 import springbook.user.TobyApplication;
 import springbook.user.sqlservice.jaxb.SqlType;
 import springbook.user.sqlservice.jaxb.Sqlmap;
@@ -16,6 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = TobyApplication.class)
+@ActiveProfiles("test")
 class OxmTest {
 
     @Autowired

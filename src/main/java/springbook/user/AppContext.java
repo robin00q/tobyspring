@@ -7,19 +7,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.mail.MailSender;
 import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.ConnectionMaker;
 import springbook.user.dao.DConnectionMaker;
 import springbook.user.dao.UserDao;
 import springbook.user.dao.UserService;
-import springbook.user.mail.DummyMailSender;
 
 import javax.sql.DataSource;
 
 //@ComponentScan(basePackages = "springbook.user") -> TobyApplication.class 의 @SpringbootApplication 을 통해 설정
 @Configuration
-@Import(SqlServiceContext.class)
+@Import({SqlServiceContext.class, ProductionAppContext.class})
 public class AppContext {
 
     @Autowired
@@ -45,11 +43,6 @@ public class AppContext {
         hikariDataSource.setUsername("root");
         hikariDataSource.setPassword("123123");
         return hikariDataSource;
-    }
-
-    @Bean
-    public MailSender mailSender() {
-        return new DummyMailSender();
     }
 
     @Bean
