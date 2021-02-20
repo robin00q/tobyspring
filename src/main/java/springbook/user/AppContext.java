@@ -10,6 +10,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import springbook.user.annotation.EnableSqlService;
 import springbook.user.dao.ConnectionMaker;
 import springbook.user.dao.DConnectionMaker;
 import springbook.user.dao.UserDao;
@@ -20,7 +21,8 @@ import javax.sql.DataSource;
 
 //@ComponentScan(basePackages = "springbook.user") -> TobyApplication.class 의 @SpringbootApplication 을 통해 설정
 @Configuration
-@Import({SqlServiceContext.class, ProductionAppContext.class})
+@EnableSqlService
+@Import(ProductionAppContext.class)
 //@PropertySource("classpath:database.properties")
 public class AppContext implements SqlMapConfig {
 
