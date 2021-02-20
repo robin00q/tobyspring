@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
+import springbook.user.DatabaseProperty;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
@@ -143,6 +144,15 @@ class UserDaoTest {
         assertEquals(user1.getRecommend(), user2.getRecommend());
     }
 
+    @Autowired
+    DatabaseProperty databaseProperty;
 
+    @Test
+    void testset() {
+        assertEquals("com.mysql.cj.jdbc.Driver", databaseProperty.getDriverClass());
+        assertEquals("jdbc:mysql://localhost:3306/tobyspring?serverTimezone=UTC&characterEncoding=UTF-8", databaseProperty.getUrl());
+        assertEquals("root", databaseProperty.getUsername());
+        assertEquals("123123", databaseProperty.getPassword());
+    }
 
 }
