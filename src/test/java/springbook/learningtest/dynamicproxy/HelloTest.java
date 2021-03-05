@@ -37,7 +37,7 @@ class HelloTest {
     void dynamicProxy() {
         Hello proxiedHello = (Hello) Proxy.newProxyInstance(
                 getClass().getClassLoader(),
-                new Class[] {Hello.class},
+                new Class[]{Hello.class},
                 new UppercaseHandler(new HelloTarget()));
 
         assertEquals("HELLO TOBY", proxiedHello.sayHello("Toby"));
@@ -77,18 +77,20 @@ class HelloTest {
     @Test
     void classNamePointcutAdvisor() {
         NameMatchMethodPointcut classMethodPointcut = new NameMatchMethodPointcut() {
-          public ClassFilter getClassFilter() {
-              return clazz -> clazz.getSimpleName().startsWith("HelloT");
-          }
+            public ClassFilter getClassFilter() {
+                return clazz -> clazz.getSimpleName().startsWith("HelloT");
+            }
         };
         classMethodPointcut.setMappedName("sayH*");
 
         checkAdvice(new HelloTarget(), classMethodPointcut, true);
 
-        class HelloWorld extends HelloTarget{}
+        class HelloWorld extends HelloTarget {
+        }
         checkAdvice(new HelloWorld(), classMethodPointcut, false);
 
-        class HelloToby extends HelloTarget{}
+        class HelloToby extends HelloTarget {
+        }
         checkAdvice(new HelloToby(), classMethodPointcut, true);
     }
 
@@ -98,7 +100,7 @@ class HelloTest {
         pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
         Hello proxiedHello = (Hello) pfBean.getObject();
 
-        if(adviced) {
+        if (adviced) {
             assertEquals("HELLO TOBY", proxiedHello.sayHello("Toby"));
             assertEquals("HI TOBY", proxiedHello.sayHi("Toby"));
             assertEquals("Thank You Toby", proxiedHello.sayThankYou("Toby"));

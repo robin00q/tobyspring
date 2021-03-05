@@ -40,7 +40,7 @@ public class EmbeddedSqlRegistry implements UpdatableSqlRegistry {
     public void updateSql(String key, String sql) throws SqlUpdateFailureException {
 
         int affected = jdbcTemplate.update("update sqlmap set sql_ = ? where key_ = ?", sql, key);
-        if(affected == 0) {
+        if (affected == 0) {
             throw new SqlUpdateFailureException(key + "에 해당하는 SQL을 찾을 수 없습니다.");
         }
     }

@@ -18,7 +18,7 @@ class UserTest {
     void upgradeLevel() {
         Level[] levels = Level.values();
         for (Level level : levels) {
-            if(level.nextLevel() == null) continue;
+            if (level.nextLevel() == null) continue;
             user.setLevel(level);
             user.upgradeLevel();
             assertEquals(level.nextLevel(), user.getLevel());
@@ -29,7 +29,7 @@ class UserTest {
     void cannotUpgradeLevel() {
         Level[] levels = Level.values();
         for (Level level : levels) {
-            if(level.nextLevel() != null) continue;
+            if (level.nextLevel() != null) continue;
             user.setLevel(level);
             assertThrows(IllegalStateException.class, () -> user.upgradeLevel());
         }

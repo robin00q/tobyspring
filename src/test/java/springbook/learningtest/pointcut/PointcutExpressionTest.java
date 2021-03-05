@@ -43,7 +43,7 @@ public class PointcutExpressionTest {
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
         pointcut.setExpression(expression);
 
-        if(expected) {
+        if (expected) {
             assertTrue(pointcut.getClassFilter().matches(clazz) &&
                     pointcut.getMethodMatcher().matches(clazz.getMethod(methodName, args), null));
         } else {

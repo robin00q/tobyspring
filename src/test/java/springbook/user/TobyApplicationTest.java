@@ -6,5 +6,6 @@ import org.junit.jupiter.api.Test;
 class TobyApplicationTest {
 
     @Test
-    void contextLoads() {}
+    void contextLoads() {
+    }
 }

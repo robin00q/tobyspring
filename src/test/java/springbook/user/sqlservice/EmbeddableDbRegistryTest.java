@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EmbeddableDbRegistryTest extends AbstractUpdatableSqlRegistryTest {
     EmbeddedDatabase db;
+
     @Override
     protected UpdatableSqlRegistry createUpdatableSqlRegistry() {
         db = new EmbeddedDatabaseBuilder()

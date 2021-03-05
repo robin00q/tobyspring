@@ -48,7 +48,7 @@ public class XmlSqlService implements SqlService, SqlRegistry, SqlReader {
     public String getSql(String key) throws SqlRetrievalFailureException {
         try {
             return sqlRegistry.findSql(key);
-        } catch(SqlNotFoundException e) {
+        } catch (SqlNotFoundException e) {
             throw new SqlRetrievalFailureException(e);
         }
     }
@@ -64,7 +64,7 @@ public class XmlSqlService implements SqlService, SqlRegistry, SqlReader {
     @Override
     public String findSql(String key) throws SqlNotFoundException {
         String sql = sqlMap.get(key);
-        if(StringUtils.isEmpty(sql)) {
+        if (StringUtils.isEmpty(sql)) {
             throw new SqlNotFoundException(key + "를 이용해서 SQL을 찾을 수 없습니다.");
         }
         return sql;
@@ -83,7 +83,7 @@ public class XmlSqlService implements SqlService, SqlRegistry, SqlReader {
             InputStream is = UserDao.class.getResourceAsStream(sqlmapFile);
             Sqlmap sqlmap = (Sqlmap) unmarshaller.unmarshal(is);
 
-            for(SqlType sqlType : sqlmap.getSql()) {
+            for (SqlType sqlType : sqlmap.getSql()) {
                 registerSql(sqlType.getKey(), sqlType.getValue());
             }
         } catch (JAXBException e) {

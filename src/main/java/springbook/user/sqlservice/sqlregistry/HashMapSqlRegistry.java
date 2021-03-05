@@ -18,7 +18,7 @@ public class HashMapSqlRegistry implements SqlRegistry {
     @Override
     public String findSql(String key) throws SqlNotFoundException {
         String sql = sqlMap.get(key);
-        if(StringUtils.isEmpty(sql)) {
+        if (StringUtils.isEmpty(sql)) {
             throw new SqlNotFoundException(key + "를 이용해서 SQL을 찾을 수 없습니다.");
         }
         return sql;

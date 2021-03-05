@@ -21,10 +21,14 @@ public enum Level {
 
     public static Level valueOf(int value) {
         switch (value) {
-            case 1: return BASIC;
-            case 2: return SILVER;
-            case 3: return GOLD;
-            default: throw new AssertionError("unknown value : " + value);
+            case 1:
+                return BASIC;
+            case 2:
+                return SILVER;
+            case 3:
+                return GOLD;
+            default:
+                throw new AssertionError("unknown value : " + value);
         }
     }
 }

@@ -11,6 +11,7 @@ public class Message {
     public String getText() {
         return text;
     }
+
     public static Message newMessage(String text) {
         return new Message(text);
     }

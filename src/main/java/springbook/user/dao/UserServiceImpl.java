@@ -10,7 +10,7 @@ import springbook.user.domain.User;
 import java.util.List;
 
 @Service("userService")
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
@@ -24,13 +24,14 @@ public class UserServiceImpl implements UserService{
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
+
     public void setMailSender(MailSender mailSender) {
         this.mailSender = mailSender;
     }
 
     @Override
     public void add(User user) {
-        if(user.getLevel() == null) {
+        if (user.getLevel() == null) {
             user.setLevel(Level.BASIC);
         }
         userDao.add(user);
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService{
     public void upgradeLevels() {
         List<User> users = userDao.getAll();
         for (User user : users) {
-            if(canUpgradeLevel(user)) {
+            if (canUpgradeLevel(user)) {
                 upgradeLevel(user);
             }
         }
@@ -73,11 +74,15 @@ public class UserServiceImpl implements UserService{
 
     private boolean canUpgradeLevel(User user) {
         Level currentLevel = user.getLevel();
-        switch(currentLevel) {
-            case BASIC: return (user.getLogin() >= 50);
-            case SILVER: return (user.getRecommend() >= 30);
-            case GOLD: return false;
-            default: throw new IllegalArgumentException("Unknown Level: " + currentLevel);
+        switch (currentLevel) {
+            case BASIC:
+                return (user.getLogin() >= 50);
+            case SILVER:
+                return (user.getRecommend() >= 30);
+            case GOLD:
+                return false;
+            default:
+                throw new IllegalArgumentException("Unknown Level: " + currentLevel);
         }
     }
 

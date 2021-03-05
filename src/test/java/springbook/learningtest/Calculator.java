@@ -11,6 +11,7 @@ public class Calculator {
 
         return lineReadTemplate(filepath, lineCallback, 0);
     }
+
     public int calcMultiply(String filePath) throws IOException {
         LineCallback<Integer> lineCallback = (line, value) -> Integer.valueOf(line) * value;
 
@@ -28,7 +29,7 @@ public class Calculator {
             T res = initVal;
             String line = null;
 
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 res = callback.doSomethingWithLine(line, res);
             }
             return res;
@@ -48,7 +49,7 @@ public class Calculator {
             System.out.println("e.getMessage() = " + e.getMessage());
             throw e;
         } finally {
-            if(br != null) {
+            if (br != null) {
                 try {
                     br.close();
                 } catch (IOException e) {

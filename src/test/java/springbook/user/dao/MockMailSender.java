@@ -18,6 +18,7 @@ public class MockMailSender implements MailSender {
     public void send(SimpleMailMessage simpleMessage) throws MailException {
         requests.add(simpleMessage.getTo()[0]);
     }
+
     @Override
     public void send(SimpleMailMessage... simpleMessages) throws MailException {
     }

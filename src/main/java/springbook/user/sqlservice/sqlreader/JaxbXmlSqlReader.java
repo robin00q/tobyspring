@@ -24,7 +24,7 @@ public class JaxbXmlSqlReader implements SqlReader {
             InputStream is = UserDao.class.getResourceAsStream(sqlmapFile);
             Sqlmap sqlmap = (Sqlmap) unmarshaller.unmarshal(is);
 
-            for(SqlType sqlType : sqlmap.getSql()) {
+            for (SqlType sqlType : sqlmap.getSql()) {
                 sqlRegistry.registerSql(sqlType.getKey(), sqlType.getValue());
             }
         } catch (JAXBException e) {

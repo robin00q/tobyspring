@@ -3,9 +3,9 @@
         "http://castor.exolab.org/mapping.dtd">
 <mapping>
     <class name="springbook.learningtest.spring.oxm4.Sqlmap">
-        <map-to xml="sqlmap" />
+        <map-to xml="sqlmap"/>
         <field name="sqls" type="springbook.learningtest.spring.oxm4.SqlType" collection="vector">
-            <bind-xml name="sql" />
+            <bind-xml name="sql"/>
         </field>
     </class>
     <class name="springbook.learningtest.spring.oxm4.SqlType">
@@ -14,7 +14,7 @@
             <bind-xml name="key" node="attribute" location="sql"/>
         </field>
         <field name="value" type="java.lang.String">
-            <bind-xml node="text" location="sql" />
+            <bind-xml node="text" location="sql"/>
         </field>
     </class>
 </mapping>

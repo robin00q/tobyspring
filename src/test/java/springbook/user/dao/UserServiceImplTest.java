@@ -187,7 +187,7 @@ class UserServiceImplTest {
     @Test
     void upgradeLevels() {
         userDao.deleteAll();
-        for(User user : users) {
+        for (User user : users) {
             userDao.add(user);
         }
 
@@ -212,7 +212,7 @@ class UserServiceImplTest {
 
     private void checkLevelUpgraded(User user, boolean upgraded) {
         User userUpdate = userDao.get(user.getId());
-        if(upgraded) {
+        if (upgraded) {
             assertEquals(user.getLevel().nextLevel(), userUpdate.getLevel());
         } else {
             assertEquals(user.getLevel(), userUpdate.getLevel());
@@ -229,7 +229,7 @@ class UserServiceImplTest {
         try {
             testUserService.upgradeLevels();
             fail("TestUserServiceException expected");
-        } catch(TestUserServiceException e) {
+        } catch (TestUserServiceException e) {
             System.out.println("catched Exception");
         }
 
@@ -239,7 +239,7 @@ class UserServiceImplTest {
     @Test
     void readOnlyTransactionAttribute() {
         testUserService.deleteAll();
-        for(User user : users) {
+        for (User user : users) {
             testUserService.add(user);
         }
         assertThrows(TransientDataAccessResourceException.class, () -> testUserService.getAll());
